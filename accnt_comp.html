@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2575.2">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;Vie Capital Comparison Tool&lt;/title&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdn.jsdelivr.net/npm/chart.js"&gt;&lt;/script&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;h1&gt;Vie Capital Account Comparison Tool&lt;/h1&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;form id="inputForm"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;label for="paycheck"&gt;How much is your paycheck after taxes?&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;input type="number" id="paycheck" placeholder="Enter amount in USD" required&gt;&lt;br&gt;&lt;br&gt;</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;label for="frequency"&gt;How often are you paid?&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;select id="frequency" required&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;option value="Weekly"&gt;Every Week&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;option value="Biweekly"&gt;Every 2 Weeks&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;option value="Monthly"&gt;Once per Month&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;option value="TwiceMonthly"&gt;Twice per Month&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/select&gt;&lt;br&gt;&lt;br&gt;</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button type="button" onclick="calculateResults()"&gt;Calculate&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/form&gt;</p>
+<p class="p2"><span class="Apple-converted-space">    </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;h2&gt;Comparison Chart&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;canvas id="comparisonChart" width="400" height="200"&gt;&lt;/canvas&gt;</p>
+<p class="p2"><span class="Apple-converted-space">    </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>function calculateResults() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Get user inputs</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const paycheck = parseFloat(document.getElementById('paycheck').value);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const frequency = document.getElementById('frequency').value;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Annual pay calculation based on frequency</p>
+<p class="p1"><span class="Apple-converted-space">            </span>let annualPay = 0;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>switch (frequency) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>case "Weekly":</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>annualPay = paycheck * 52;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>break;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>case "Biweekly":</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>annualPay = paycheck * 26;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>break;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>case "Monthly":</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>annualPay = paycheck * 12;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>break;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>case "TwiceMonthly":</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>annualPay = paycheck * 24;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>break;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Tool Calculator logic</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const checkingEarnings = annualPay;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const checkingSpending = annualPay;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const checkingLeftover = checkingEarnings - checkingSpending;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const capitalEarnings = annualPay;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const capitalSpending = annualPay * 0.9; // Example: 10% saving in spending</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const capitalLeftover = capitalEarnings - capitalSpending;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Render Chart</p>
+<p class="p1"><span class="Apple-converted-space">            </span>renderChart([checkingLeftover, capitalLeftover]);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function renderChart(data) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const ctx = document.getElementById('comparisonChart').getContext('2d');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>new Chart(ctx, {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>type: 'bar',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>data: {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>labels: ['Checking Account', 'Vie Capital Account'],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>datasets: [{</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>label: 'Amount Leftover (USD)',</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>data: data,</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(54, 162, 235, 0.2)'],</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>borderColor: ['rgba(75, 192, 192, 1)', 'rgba(54, 162, 235, 1)'],</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>borderWidth: 1</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>}]</p>
+<p class="p1"><span class="Apple-converted-space">                </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                </span>options: {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>scales: {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>y: {</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>beginAtZero: true</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
