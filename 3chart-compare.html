@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>See what Vie can do for you</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #286048;
+        }
+        p {
+            text-align: center;
+        }
+        .input-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+            gap: 10px;
+        }
+        input {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 200px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #286048;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #14FF55;
+        }
+        .graph-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        #resultsGraph {
+            max-width: 100%;
+            height: 600px;
+        }
+        #comparisonGraph, #doughnutGraph {
+            max-width: 100%;
+            height: 400px;
+        }
+    </style>
+    <script>
+        function calculateProjections() {
+            const monthlyIncome = parseFloat(document.getElementById("monthlyIncome").value);
+            if (isNaN(monthlyIncome) || monthlyIncome <= 0) {
+                alert("Please enter a valid monthly income.");
+                return;
+            }
+
+            const yearlyIncome = monthlyIncome * 12;
+            const results = [];
+            const years = [];
+            const policyValues = [];
+            const loanBalances = [];
+            const netWorths = [];
+            const growthRate = 0.15;
+
+            for (let year = 1; year <= 5; year++) {
+                const policyValue = yearlyIncome * year * (1 + growthRate) ** year;
+                const loanBalance = policyValue * 0.6;
+                const netWorth = policyValue - loanBalance;
+
+                results.push({ year: `Y${year}`, policyValue, loanBalance, netWorth });
+                years.push(`Y${year}`);
+                policyValues.push(policyValue.toFixed(2));
+                loanBalances.push(loanBalance.toFixed(2));
+                netWorths.push(netWorth.toFixed(2));
+            }
+
+            const totalNetWorth = netWorths.reduce((acc, val) => acc + parseFloat(val), 0);
+            const totalDeposited = yearlyIncome * 5;
+
+            drawGraph(years, policyValues, loanBalances, netWorths);
+            drawComparisonChart(monthlyIncome);
+            drawDoughnutChart(totalNetWorth, totalDeposited);
+        }
+
+        function drawGraph(years, policyValues, loanBalances, netWorths) {
+            const ctx = document.getElementById('resultsGraph').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: years,
+                    datasets: [
+                        {
+                            label: 'Policy Value',
+                            data: policyValues,
+                            borderColor: '#286048',
+                            borderWidth: 4,
+                            tension: 0.4,
+                        },
+                        {
+                            label: 'Loan Balance',
+                            data: loanBalances,
+                            borderColor: '#14FF55',
+                            borderWidth: 4,
+                            tension: 0.4,
+                        },
+                        {
+                            label: 'Net Worth',
+                            data: netWorths,
+                            borderColor: '#BAEBCE',
+                            borderWidth: 4,
+                            tension: 0.4,
+                        },
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            enabled: true,
+                        },
+                    },
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: { grid: { display: false }, beginAtZero: true },
+                    },
+                },
+            });
+        }
+
+        function drawComparisonChart(monthlyIncome) {
+            const capitalAccount = (monthlyIncome * 12) * 0.09;
+            const checkingAccount = 0;
+
+            const ctx = document.getElementById('comparisonGraph').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Capital Account', 'Checking Account'],
+                    datasets: [
+                        {
+                            label: '1-Year Difference',
+                            data: [capitalAccount.toFixed(2), checkingAccount],
+                            backgroundColor: ['#286048', '#BAEBCE'],
+                            borderRadius: 10,
+                        },
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                    },
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: { grid: { display: false }, beginAtZero: true },
+                    },
+                },
+            });
+        }
+
+        function drawDoughnutChart(totalNetWorth, totalDeposited) {
+            const ctx = document.getElementById('doughnutGraph').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Net Worth', 'Total Deposited'],
+                    datasets: [
+                        {
+                            data: [totalNetWorth.toFixed(2), totalDeposited.toFixed(2)],
+                            backgroundColor: ['#14FF55', '#BAEBCE'],
+                        },
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                    },
+                },
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Your Old Account vs. Your Capital Account</h1>
+    <p>Enter your monthly income to calculate projections:</p>
+    <div class="input-container">
+        <input type="number" id="monthlyIncome" placeholder="Monthly Income" />
+        <button onclick="calculateProjections()">Calculate</button>
+    </div>
+    <div class="graph-container">
+        <canvas id="resultsGraph"></canvas>
+        <canvas id="comparisonGraph"></canvas>
+        <canvas id="doughnutGraph"></canvas>
+    </div>
+</body>
+</html>
